@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <title>Markdown Previewer</title>
+ </head>
+
+ <body>
+  <h1>Markdown Previewer</h1>
+  <textarea id="editor" rows="20" cols="100"># text1
+## text2
+[freecodecamp](https://www.freecodecamp.org)
+`text3`
+```
+function example(text4) {if (text4) {return text4;}}
+```
+* text5
+> text6
+![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
+**text**
+  </textarea>
+  <div id="preview"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js" integrity="sha512-zAs8dHhwlTbfcVGRX1x0EZAH/L99NjAFzX6muwOcOJc7dbGFNaW4O7b9QOyCMRYBNjO+E0Kx6yLDsiPQhhWm7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+   let texteditor = document.getElementById("editor");
+   texteditor.addEventListener("input", change);
+   function change() {
+    document.getElementById("preview").innerHTML = marked.parse(texteditor.value);
+   };
+   window.onload = change;
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ </body>
+</html>
