@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Javascript Calculator</title>
+  <style>
+   .calculator{
+    margin: 0 auto;
+    width: 600px;
+   }
+   .grid-container {
+    display: grid;
+    grid-template-colums: auto auto auto auto;
+    height: 400px;
+    width: 600px;
+   }
+   #container {
+   height: 80px;
+   }
+   #display {
+    grid-column: 1 / 5;
+   }
+   #clear {
+    grid-column: 1 / 3;
+   }
+   #zero {
+    grid-column: 1 / 3;
+   }
+   #equals {
+    grid-column: 4 / 5;
+    grid-row: 4 / 6;
+   }
+   p {
+    text-align: right;
+   }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+ </head>
+
+ <body>
+  <div id="root"></div>
+  <script type="text/babel">
+   function App(){
+    const [distext, setDisText] = React.useState("");
+    const [onetext, setOneText] = React.useState("0")
+
+    function handleCleClick(){
+     setDisText("");
+     setOneText("0");
+    }
+
+    function handleNumClick(num){
+     if(distext == ""){
+      setDisText(num);
+      setOneText(num);
+     } else if(/[+*\/-]/.test(onetext)) {
+      setDisText(distext + num);
+      setOneText(num);
+     } else if(distext[distext.length - 1] == "0"){
+      let newdistext = distext.slice(0, distext.length - 1) + num;
+      let newonetext = onetext.slice(0, onetext.length - 1) + num;
+      setDisText(newdistext);
+      setOneText(newonetext);
+     } else if(distext.includes("=")){
+      setDisText(num);
+      setOneText(num);
+     } else {
+      setDisText(distext + num);
+      setOneText(onetext + num);
+     }
+    }
+
+    function handle0Click(){
+     if(/[+*\/-]0+$/.test(distext)){
+      return;
+     } else if(onetext == "0") {
+      setDisText("0");
+     } else if(/[+*\/-]/.test(onetext)){
+      setDisText(newdistext + "0");
+      setOneText("0");
+     } else {
+      setDisText(distext + "0");
+      setOneText(onetext + "0");
+     }
+    }
+
+    function handleDecClick(){
+     if(onetext.includes(".")){
+      return;
+     } else if(/[+*\/-]/.test(onetext) || onetext == ""){
+      setDisText(distext + "0.");
+      setOneText("0.");
+     } else {
+      setDisText(distext + ".");
+      setOneText(onetext + ".");
+     }
+    }
+
+    function handleOpeClick(str){
+     if(onetext == "0."){
+      return;
+     } else if(/[+*\/]-$/.test(distext)){
+      let newdistext = distext.slice(0, distext.length - 2) + str;
+      setDisText(newdistext);
+      setOneText(str);
+     } else if(/[+*\/-]/.test(onetext)){
+      let newdistext = distext.slice(0, distext.length - 1) + str;
+      setDisText(newdistext);
+      setOneText(str);
+     } else if(distext.includes("=")){
+      setDisText(onetext + str)
+      setOneText(str);
+     } else {
+      setDisText(distext + str);
+      setOneText(str);
+     }
+    }
+
+    function handleSubClick(){
+     if(onetext == "0." || /-/.test(onetext)){
+      return;
+     } else {
+      setDisText(distext + "-");
+      setOneText("-")
+     }
+    }
+
+    function handleEquClick(){
+     setDisText(distext + "=" + Function('"use strict";return (' + distext +')')());
+     setOneText(Function('"use strict";return (' + distext +')')());
+    }
+
+    return(
+     <div class="calculator">
+      <div id="container">
+       <p>{distext}</p>
+       <p id="display">{onetext}</p>
+      </div>
+      <div class="grid-container">
+       <button id="clear" onClick={() => handleCleClick()}>AC</button>
+       <button id="divide" onClick={() => handleOpeClick("/")}>/</button>
+       <button id="multiply" onClick={() => handleOpeClick("*")}>x</button>
+       <button id="seven" onClick={() => handleNumClick("7")}>7</button>
+       <button id="eight" onClick={() => handleNumClick("8")}>8</button>
+       <button id="nine" onClick={() => handleNumClick("9")}>9</button>
+       <button id="subtract" onClick={() => handleSubClick()}>-</button>
+       <button id="four" onClick={() => handleNumClick("4")}>4</button>
+       <button id="five" onClick={() => handleNumClick("5")}>5</button>
+       <button id="six" onClick={() => handleNumClick("6")}>6</button>
+       <button id="add" onClick={() => handleOpeClick("+")}>+</button>
+       <button id="one" onClick={() => handleNumClick("1")}>1</button>
+       <button id="two" onClick={() => handleNumClick("2")}>2</button>
+       <button id="three" onClick={() => handleNumClick("3")}>3</button>
+       <button id="equals" onClick={() => handleEquClick()}>=</button>
+       <button id="zero" onClick={() => handle0Click()}>0</button>
+       <button id="decimal" onClick={() => handleDecClick()}>.</button>
+    　</div>
+     </div>
+    )
+   }
+   ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ <body>
+</html>

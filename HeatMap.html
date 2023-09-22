@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Heat Map</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.3/d3.min.js" integrity="sha512-Bg2eiKHzTFFm3RXa2xWihCacicF47EiEtkk/qD2UpqimWHNnQsIJxuwrf958rNHVvkpcjRgUyPblU6LOoAxTSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ </head>
+
+ <body>
+  <script>
+   const title = d3.select("body")
+                   .append("h1")
+                   .attr("id", "title")
+                   .text("Heat Map");
+   const description = d3.select("body")
+                         .append("p")
+                         .attr("id", "description")
+                         .text("Monthly Global Land-Surface Temperature");
+
+   const req = new XMLHttpRequest();
+   req.open("GET",'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json',true);
+   req.send();
+   req.onload = function(){
+    const json = JSON.parse(req.responseText);
+    const dataset = json.monthlyVariance;
+    
+    const w = 1120;
+    const h = 600; 
+    const pad = 60;
+    const tooltip = d3.select("body")
+                      .append("div")
+                      .attr("id", "tooltip")
+                      .style("position", "absolute")
+                      .style("visibility", "hidden");
+    const mon = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,];
+
+    const xScale = d3.scaleLinear()
+                     .domain([1753, 2016])
+                     .range([pad, w - pad]);
+    const yScale = d3.scaleBand()
+                     .domain(mon)
+                     .range([pad, h - pad]);
+    const svg = d3.select("body")
+                  .append("svg")
+                  .attr("width", w)
+                  .attr("height", h);
+    svg.selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append("rect")
+        .attr("class", "cell")
+        .attr("data-month", d => mon[d.month - 1])
+        .attr("data-year", d => d.year)
+        .attr("data-temp", d => d.variance + 8.66)
+        .attr("x", d => xScale(d.year))
+        .attr("y", d => yScale(mon[d.month - 1]))
+        .attr("width", 5)
+        .attr("height", 40)
+        .attr("fill", d => {
+          if(d.variance <= -0.66){return "blue";}
+          if(-0.66 < d.variance && d.variance <= 0.34){return "green";}
+          if(0.34 < d.variance && d.variance <= 1.34){return "yellow";}
+          if(1.34 < d.variance){return "orange";}
+         })
+        .on("mouseover", function(e, d){
+         tooltip
+         .attr("data-year", d.year)
+         .style("visibility", "visible")
+         .html(d.year + "-" + d.month + "<br>" + (Math.round((d.variance + 8.66) * 100) / 100) + "℃");
+         })
+        .on("mouseout", function(){
+         tooltip.style("visibility", "hidden");
+        });
+    const xAxis = d3.axisBottom(xScale)
+                    .tickFormat(d => d);
+    const yAxis = d3.axisLeft(yScale)
+                    .tickFormat(d => {
+                     if(d == 0){return "January";}
+                     if(d == 1){return "February";}
+                     if(d == 2){return "March";}
+                     if(d == 3){return "April";}
+                     if(d == 4){return "May";}
+                     if(d == 5){return "June";}
+                     if(d == 6){return "July";}
+                     if(d == 7){return "August";}
+                     if(d == 8){return "September";}
+                     if(d == 9){return "October";}
+                     if(d == 10){return "November";}
+                     if(d == 11){return "December";}
+                    });
+    svg.append("g")
+       .attr("id", "x-axis")
+       .attr("transform", "translate(0," + (h - pad) + ")")
+       .call(xAxis)
+    svg.append("g")
+       .attr("id", "y-axis")
+       .attr("transform", "translate(" + pad + ",0)")
+       .call(yAxis)
+
+    const leg = ["blue", "green", "yellow", "orange"];
+    const legend = d3.select("body")
+                     .append("svg")
+                     .attr("id", "legend")
+                     .attr("width", 300)
+                     .attr("height", 50)
+                     .style("display", "block");
+    const xscale = d3.scaleLinear()
+                     .domain([6.0, 10.0])
+                     .range([40, 200])
+    legend.selectAll("rect")
+          .data(leg)
+          .enter()
+          .append("rect")
+          .attr("width", 40)
+          .attr("height", 20)
+          .attr("x", (d,i) => xscale(i + 7))
+          .attr("y", 0)
+          .attr("fill", d => d)
+    const xaxis = d3.axisBottom(xscale)
+                    .ticks(4)
+                    .tickFormat(d => {
+                     if(d == 6){return "";}
+                     if(d == 7){return "～7.0";}
+                     if(d == 8){return "8.0";}
+                     if(d == 9){return "9.0～";}
+                     if(d == 10){return "";}
+                    })
+    legend.append("g")
+          .attr("transform", "translate(40, 20)")
+          .call(xaxis)
+   };
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ </body>
+</html>

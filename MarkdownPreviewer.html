@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <title>Markdown Previewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js" integrity="sha512-zAs8dHhwlTbfcVGRX1x0EZAH/L99NjAFzX6muwOcOJc7dbGFNaW4O7b9QOyCMRYBNjO+E0Kx6yLDsiPQhhWm7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+ </head>
+
+ <body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+   function App(){
+    const [text, setText] = React.useState(`# text1
+## text2
+[freecodecamp](https://www.freecodecamp.org)
+\`text3\`
+\`\`\`
+function example(text4) {if (text4) {return text4;}}
+\`\`\`
+* text5
+> text6
+![freeCodeCamp Logo](https://cdn.freecodecamp.org/testable-projects-fcc/images/fcc_secondary.svg)
+**text**`)
+    return(
+     <>
+     <textarea id="editor" rows="20" cols="100" value={text} onChange={e =>setText(e.target.value)} />
+     <div id="preview" dangerouslySetInnerHTML={{__html: marked.parse(text)}} />
+     </>
+    );
+   }
+
+   ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ <body>
+</html>

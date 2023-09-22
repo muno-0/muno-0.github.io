@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Random Quote Machine</title>
+  <style>
+   body {
+    display: flex;
+    justify-content: center;
+   }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+ </head>
+
+ <body>
+  <div id="root"></div>
+  <script type="text/babel">
+   const arr = [
+    {"quote-text": "aaaaaa", "quote-author": "AA"},
+    {"quote-text": "bbbbbb", "quote-author": "BB"},
+    {"quote-text": "cccccc", "quote-author": "CC"}
+   ];
+
+   const index = function(){
+    return Math.floor(Math.random() * arr.length);
+   }
+
+   function Text({content}){
+    return <div id="text">{content}</div>;
+   }
+
+   function Author({content}){
+    return <div id="author">{content}</div>;
+   }
+
+   function Button({onButtonClick}){
+    return(
+     <button id="new-quote" type="button" onClick={onButtonClick} >new quote</button>
+    );
+   }
+
+   function App() {
+    const [rqnum, setRqnum] = React.useState(index);
+    let text = arr[rqnum]["quote-text"];
+    let author = arr[rqnum]["quote-author"];
+    function handleClick(){
+     setRqnum(index);
+    };
+
+    return(
+     <div id="quote-box">
+      <Text content={text} />
+      <Author content={author} />
+      <Button onButtonClick={handleClick} />
+      <a href="twitter.com/intent/tweet" id="tweet-quote">tweet</a>
+     </div>
+    );
+   }
+
+   ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ <body>
+</html>

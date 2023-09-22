@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Drum Machine</title>
+  <style>
+   body {
+    display: flex;
+    justify-content: center;
+   }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+ </head>
+
+ <body>
+  <div id="root"></div>
+  <script type="text/babel">
+   function App(){
+    const [distext, setDistext] = React.useState("");
+    function handleFunc(e){
+     let audio = document.getElementById(e.target.textContent);
+     audio.play()
+     setDistext(e.target.id);
+    }
+    React.useEffect(() => {
+     document.addEventListener("keydown", (e) => {
+      let audio = document.getElementById(e.key.toUpperCase());
+     audio.play()
+     setDistext(document.getElementById(e.key.toUpperCase()).parentElement.id)
+     });
+    }, []);
+    return (
+     <div id="drum-machine">
+      <div id="display">{distext}</div>
+      <button id="Heater1" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       Q
+       <audio className="clip" id="Q" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3">
+       </audio>
+      </button>
+      <button id="Heater2" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       W
+       <audio className="clip" id="W" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3">
+       </audio>
+      </button>
+      <button id="Heater3" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       E
+       <audio className="clip" id="E" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3">
+       </audio>
+      </button>
+      <button id="Heater4" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       A
+       <audio className="clip" id="A" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3">
+       </audio>
+      </button>
+      <button id="Clap" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       S
+       <audio className="clip" id="S" src="https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3">
+       </audio>
+      </button>
+      <button id="Open-HH" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       D
+       <audio className="clip" id="D" src="https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3">
+       </audio>
+      </button>
+      <button id="Kick-n'-Hat" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       Z
+       <audio className="clip" id="Z" src="https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3">
+       </audio>
+      </button>
+      <button id="Kick" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       X
+       <audio className="clip" id="X" src="https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3">
+       </audio>
+      </button>
+      <button id="Closed-HH" className="drum-pad" onClick={(e) => handleFunc(e)}>
+       C
+       <audio className="clip" id="C" src="https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3">
+       </audio>
+      </button>
+     </div>
+    )
+   }
+   ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ <body>
+</html>

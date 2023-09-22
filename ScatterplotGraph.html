@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Scatterplot Graph</title>
+  <style>
+  svg {
+   background-color: green;
+  }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.3/d3.min.js" integrity="sha512-Bg2eiKHzTFFm3RXa2xWihCacicF47EiEtkk/qD2UpqimWHNnQsIJxuwrf958rNHVvkpcjRgUyPblU6LOoAxTSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ </head>
+
+ <body>
+  <script>
+   const title = d3.select("body")
+                   .append("h1")
+                   .attr("id", "title")
+                   .text("Scatterplot Graph");
+
+   const req = new XMLHttpRequest();
+   req.open("GET",'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json',true);
+   req.send();
+   req.onload = function(){
+    const dataset = JSON.parse(req.responseText);
+    console.log(dataset)
+    const w = 1000;
+    const h = 500;
+    const pad = 60;
+    const tooltip = d3.select("body")
+                      .append("div")
+                      .attr("id", "tooltip")
+                      .style("position", "absolute")
+                      .style("visibility", "hidden");
+    const minX = d3.min(dataset, d => d.Year);
+    const maxX = d3.max(dataset, d => d.Year);
+    const parseTime = d3.timeParse("%M:%S");
+    const minY = d3.min(dataset, d => parseTime(d.Time));
+    const maxY = d3.max(dataset, d => parseTime(d.Time));
+    const xScale = d3.scaleLinear()
+                     .domain([minX - 1, maxX + 1])
+                     .range([pad, w - pad]);
+    const yScale = d3.scaleLinear()
+                     .domain([minY, maxY])
+                     .range([pad, h - pad]);
+    const svg = d3.select("body")
+                  .append("svg")
+                  .attr("width", w)
+                  .attr("height", h);
+    svg.selectAll("circle")
+        .data(dataset)
+        .enter()
+        .append("circle")
+        .attr("cx", (d) => xScale(d.Year))
+        .attr("cy", (d) => yScale(parseTime(d.Time)))
+        .attr("r", 5)
+        .attr("class", "dot")
+        .attr("data-xvalue", (d) => d.Year)
+        .attr("data-yvalue", (d) => parseTime(d.Time))
+        .style("fill", (d) => {
+         if (!d.Doping){return "white";}
+         else {return "black";}
+        })
+        .on("mouseover", function(e, d){
+         tooltip
+         .attr("data-year", d.Year)
+         .style("visibility", "visible")
+         .html(d.Time + "<br>" + d.Year);
+         })
+        .on("mouseout", function(){
+         tooltip.style("visibility", "hidden");
+        });
+        
+    const xAxis = d3.axisBottom(xScale)
+                    .tickFormat((d) => d);
+    const timeFormat = d3.timeFormat("%M:%S");
+    const yAxis = d3.axisLeft(yScale)
+                    .tickFormat(timeFormat);
+    svg.append("g")
+       .attr("id", "x-axis")
+       .attr("transform", "translate(0," + (h - pad) + ")")
+       .call(xAxis);
+    svg.append("g")
+       .attr("id", "y-axis")
+       .attr("transform", "translate(" + pad + ",0)")
+       .call(yAxis);
+
+    const leg = [["doping", "black"],["no doping", "white"]];
+    const legend = svg.append("g")
+                      .attr("id", "legend");
+    legend.selectAll("rect")
+          .data(leg)
+          .enter()
+          .append("rect")
+          .attr("x", 800)
+          .attr("y", (d,i) => 150 + 20 * i)
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("fill", d => d[1]);
+    legend.selectAll("text")
+          .data(leg)
+          .enter()
+          .append("text")
+          .attr("x", 820)
+          .attr("y", (d,i) => 160 + 20 * i)
+          .text(d => d[0]);
+   };
+  </script>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+ </body>
+</html>
